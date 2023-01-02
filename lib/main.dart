@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return const GetMaterialApp(
       home: WidgetMenu(),
     );
   }
@@ -23,21 +25,22 @@ class WidgetMenu extends StatefulWidget {
 }
 
 class _WidgetMenuState extends State<WidgetMenu> {
-   int _selectedIndex = 0;
+  int _selectedIndex = 0;
   final List<Widget> _page = [
-    const Center(child: Text("Index 0 : home")),
+    HomePage(),
     const ProfilePage(),
+    HomePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body : _page.elementAt(_selectedIndex),
+      body: _page.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'Rumah',
           ),
           BottomNavigationBarItem(
             icon: Icon(
@@ -45,14 +48,18 @@ class _WidgetMenuState extends State<WidgetMenu> {
             ),
             label: "Profile",
           ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+            ),
+            label: "Coba",
+          )
         ],
         currentIndex: _selectedIndex,
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
           });
-
-          
         },
       ),
     );
@@ -174,6 +181,83 @@ class ProfilePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// class HomePage extends StatelessWidget {
+//   HomePage({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Column(
+//         children: [
+//           Lottie.asset('assets/lottie/internet_connection.json'),
+//           ElevatedButton(
+//             onPressed: () async {
+//               final data = await Get.to(()=> SecondPage(), arguments: "Hello second page");
+//             },
+//             child: const Text('Pindah Ke Halaman selanjutnya'),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+class SecondPage extends StatelessWidget {
+  final String arg = Get.arguments;
+  SecondPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.back(result: "Hello from second page".toUpperCase());
+        },
+        child: const Icon(Icons.arrow_back),
+      ),
+      body:Text(arg.isEmpty ? "empty" : arg),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>{
+  String x ="";
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Lottie.asset('assets/lottie/internet_connection.json'),
+          ElevatedButton(
+            onPressed: () async {
+              String y = await Get.to(()=> SecondPage(), arguments: "Hello second page");;
+              setState(() {
+                x = y;
+              });
+            },
+            // Cara Kedua menggunaan them wajib menggunakan nullsafety
+            // onPressed: () {
+            //   Get.to(()=> SecondPage(), arguments: "Hello second page")!.then((value) => setState(() {
+            //     x = value;
+            //   }));
+            // },
+            child: const Text('Pindah Ke Halaman selanjutnya'),
+          ),
+          Text(x, textScaleFactor: 2,)
+        ],
       ),
     );
   }
